@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fish</title>
+</head>
+<body>
+
+    <div id="body">
+
+        <!-- Intro Screen -->
+        <div id="introScreen" onclick="hideIntro()">
+            <img src="static/blackjackLogo.png" alt="">
+            <p style="text-align: center;">Press or Tap <br>
+                Anywhere to Start</p>
+            
+            <div style="justify-self: flex-end;margin-top: auto;">
+                <h4 style="color: white;">HUBERT ®™</h4>
+            </div>
+        </div>
+
+        <!-- mainGame -->
+        <div id="mainWindow" style="display: none;">
+            <div id="stats">
+                <div>
+                <p style="margin-bottom: 8px;margin-top: 8px;">Time: <span id="currentTime">7</span><span id="ampm">:00am</span></p>
+                <p style="margin-top: 0px;margin-bottom: 8px;">You caught: <span id="totalFish" style="color:crimson;" >0</span> fish</p>
+                </div>
+                <p style="margin-top: 0px;margin-bottom: 8px;">Total weight: <span id="totalWeight" style="color: gold;">0.00</span> lbs</p>
+                <p style="margin-top: 0px;margin-bottom: 8px;">Total bank: $<span id="totalBank" style="color: green;">0.00</span></p>
+            </div>
+            <!-- Modal-instructions -->
+            <div id="instructions">
+
+                <p>You've gone fishing! Try to maximize the value of your caught fish. You can fish
+                    for 12 hours (until 7:00pm) and can catch at most, 21 lbs of fish.</p>
+
+                    <button style="margin-left: 115px;" onclick="closeInstructions()">Start</button>
+            </div>
+
+            <!-- gamePlayDiv -->
+            <div id="gamePlayDiv" style="padding: 4%;">
+
+                <p id="text" style="font-size: 150%;color:rgb(202, 202, 202);"> &nbsp; </p> 
+
+                <p id="overweightText" style="font-size: 150%;color:rgb(202, 202, 202);display: none;"> 
+                        This fish would put you over 21 lbs, so you have to release it. </p> 
+                
+                <div id="buttons" style="display: flex; justify-content: space-around;">
+                    <button onclick="keepFish()" id="keepButton">Keep</button>
+                    <button onclick="releaseFish()" style="background:#881400;">Release</button>
+                </div>
+
+            </div>
+
+            <div id="gameOverDiv">
+                <p id="gameOverText" style="font-size: 150%;color:rgb(202, 202, 202);">It's 7:00pm.  You've caught: ${caughtFish.length} fish, weighing ${calcWeight()} lbs, and made $${calcCost()}</p>
+
+                <h4 style="font-size: 150%;color:rgb(202, 202, 202);margin:0px;">LeaderBoard</h4>
+                <div id="leaderBoard">
+                    <p>#</p><p>NAME</p><p>VALUE</p><p></p>
+
+                    <p>1</p><p class="userName" style="font-size:125%">name</p><p class="userScore" style="color: green; font-size:125%">value</p><p></p>
+                    <p>2</p><p class="userName" style="font-size:125%">name</p><p class="userScore" style="color: green; font-size:125%">value</p><p></p>
+                    <p>3</p><p class="userName" style="font-size:125%">name</p><p class="userScore" style="color: green; font-size:125%">value</p><p></p>
+                    <p>4</p><p class="userName" style="font-size:125%">name</p><p class="userScore" style="color: green; font-size:125%">value</p><p></p>
+                    <p>5</p><p class="userName" style="font-size:125%">name</p><p class="userScore" style="color: green; font-size:125%">value</p><p></p>
+
+                </div>
+
+                <input id="nameInput" type="text" style="display: none;"><button id="submitButton" style="background: #881400;display: none;" onclick="updateScores()">ok</button>
+                
+                <button id="playAgainButton" style="text-align: center;margin-left:114px;margin-top: 10%;display: none;" onclick="newGame()">
+                                                        Play Again</button>
+            </div>
+        </div>
+    
+</div>
+</body>
+</html>
+
+<style>
+
+    @font-face {
+    font-family: arcade;
+    src: url(static/ARCADE.TTF);
+    }
+
+    body{
+        margin: 0px;
+        padding: 0px;
+        color:bisque;
+        background-color: rgb(35, 35, 35);
+
+    }
+
+    #body{
+        height: 850px;
+        height: 92vh;
+        width: 400px;
+        background-color: rgb(35, 35, 35);
+        border: 10px double bisque;
+        border-color:rgb(202, 202, 202);;
+        margin: 0px;
+        padding: 1%;
+        display: block;
+        margin: auto;
+        /* font-family: arcade; */
+        /* position: relative; */
+    }
+
+    #introScreen{
+        z-index: 10;
+        height: 100%;
+        width: 100%;
+        background-color: rgb(35, 35, 35);
+        display: flex;
+        flex-direction: column;
+  align-items: center;
+  justify-content: center;
+        }
+
+        img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            /* margin-top: 45%; */
+            margin-bottom: 14%;
+            
+            }
+
+            @keyframes fade {
+                0% { opacity: 0 }
+                100% { opacity: 1 }
+                }
+
+    #instructions{
+        width: 390px;
+        height: auto;
+        /* padding: 5%; */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 2;
+        font-size: 170%;
+        border: 1px solid black;
+        line-height: 1.8;
+        background-color: black;
+        border: 10px double bisque;
+        border-color:rgb(202, 202, 202);;
+
+    }
+
+
+    #stats{
+        width: auto;
+        height: auto;
+        background-color: rgb(35, 35, 35);
+        border: 10px double rgb(202, 202, 202);;
+        /* color: beige; */
+        color: rgb(202, 202, 202);
+        font-size: 120%;
+        padding: 2%;
+    }
+    
+    button{
+	background: #7C7C7C;
+	border-bottom: 6px inset rgba(0,0,0,.5);
+	border-left: 6px inset rgba(0,0,0,.5);
+	border-right: 6px inset rgba(255,255,255,.5);
+	border-top: 6px inset rgba(255,255,255,.5);
+	box-sizing: border-box;
+	color: white;
+	cursor: pointer;
+	display: inline-block;
+	font-size: 2.2rem;
+	/* margin: 1rem; */
+    margin: 0px;
+	/* min-width: 200px; */
+    min-width: 150px;
+	padding: .2rem;
+    padding-top: .4rem;
+    /* padding: 0px; */
+    text-align: center;
+	/* text-transform: uppercase; */
+	width: auto;
+    background: #005800;
+    font-family: arcade;
+    }
+
+    #gameOverDiv{
+        display: none;
+    }
+
+        #leaderBoard{
+            display: grid;
+            grid-template-columns:auto auto auto auto;
+
+            width: auto;
+            height: auto;
+            border: 10px double rgb(202, 202, 202);;
+            /* color: beige; */
+            color: rgb(202, 202, 202);
+            font-size: 120%;
+            padding: 2%;
+        }
+
+            #leaderBoard p{
+                margin: 5%; 
+            }
+        
+        #nameInput{
+            display: inline-block;
+            font-size: 260%;
+            width:220px;
+            margin-top: 10%;
+            margin-right: 2%;
+
+        }
+  
+</style>
+<script>
+    let time =7;
+    let caughtFish = [];
+    var newFish = {};
+    var highScores =JSON.parse({{ highScoresJSON|safe }});
+    var highScoresA = [];
+
+    function hideIntro()
+    {
+        introScreen.style['display']='none';
+        mainWindow.style['display']='flex';
+        mainWindow.style['flex-direction']='column';
+    }
+
+    function newGame()
+    {
+        time =7;
+        caughtFish = [];
+
+        gamePlayDiv.style['display'] = 'block';
+        gameOverDiv.style['display'] = 'none';
+
+            playAgainButton.style['display'] = 'none';
+
+        goFishing();
+    }
+
+
+function goFishing()
+{
+    updateStats();
+
+    if(time == 20)
+    {
+        gameOver();
+        return;
+    }
+
+    newFish = generateFish();
+    keepButton.style['display'] = '';
+
+    text.innerHTML = `You caught a '${newFish.fishType}' weighing ${newFish.weight.toFixed(2)} lbs and valued at $${newFish.value.toFixed(2)}`;
+
+    //handle overweight
+    if(parseFloat(calcWeight()) + newFish.weight > 21)
+    {
+        overweightText.style['display'] = 'block';
+        keepButton.style['display'] = 'none';
+    }
+    
+}
+
+function generateFish()
+{
+    let adjative = adjatives[Math.floor(Math.random()*adjatives.length)];
+    let color = colors[Math.floor(Math.random()*4)];
+    let fishType = fishTypes[Math.floor(Math.random()*10)];
+    let value = Math.floor(Math.random()*500)/100;
+    let weight = Math.floor(Math.random()*500)/100;
+
+    return {fishType:`${makeCap(adjative)} ${color} ${fishType}`, value:parseFloat(value), weight:parseFloat(weight)};
+}
+
+function keepFish()
+{
+    caughtFish.push(newFish);
+    goFishing();
+}
+
+function releaseFish()
+{
+    overweightText.style['display'] = 'none';
+    goFishing();
+
+}
+
+function updateStats()
+{
+    time +=1;
+    let time_formatted = time;
+    if(time>12){time_formatted = time - 12;ampm.innerHTML = ':00pm'}
+
+    currentTime.innerHTML = time_formatted;
+    totalFish.innerHTML = caughtFish.length;
+    totalWeight.innerHTML = calcWeight();
+    totalBank.innerHTML = calcCost();
+
+}
+
+function calcWeight()
+{
+    let newTotalWeight = 0;
+    for (let fish of caughtFish)
+    {
+        newTotalWeight += fish.weight;
+    }
+    return newTotalWeight.toFixed(2);
+}
+
+function calcCost()
+{
+    let totalCost = 0;
+    for (let fish of caughtFish)
+    {
+        totalCost += fish.value;
+    }
+    // console.log(totalCost);
+    // console.log(typeof totalCost);
+    return totalCost.toFixed(2)
+}
+
+
+function gameOver()
+{
+    gamePlayDiv.style['display'] = 'none';
+
+    gameOverText.innerHTML = `It's 7:00pm.  You've caught: ${caughtFish.length} fish, weighing ${calcWeight()} lbs, and made $${calcCost()}`
+    gameOverText.style['display'] = '';
+
+    var names = document.getElementsByClassName('userName');
+    var scores = document.getElementsByClassName('userScore');
+    console.log(highScores);
+    console.log(typeof highScores);
+
+    for(let i =0; i< names.length; i++)
+    {   
+        names[i].innerHTML = highScores[i].name;
+        scores[i].innerHTML = highScores[i].score;
+
+        names[i].style['color']=''; 
+        scores[i].style['color']='';
+    }
+
+
+    gameOverDiv.style['display'] = 'block';
+
+    if(highScores[4].score< Number(calcCost()))
+    {
+        nameInput.style['display'] = 'inline-block';
+        submitButton.style['display'] = 'inline-block';
+
+    }
+    else{
+        playAgainButton.style['display'] = 'inline-block';
+    }
+}
+
+function updateScores()
+{
+    // let newName =document.getElementById('nameInput');
+    let newEntry = {name:nameInput.value, score:Number(calcCost()), isNew:true}
+    highScores.push(newEntry);
+    
+    //sort
+    for (let i=0;i<highScores.length;i++) 
+    {
+        if(newEntry.score > highScores[i].score)
+        {
+            highScores.splice(i, 0, newEntry);
+            highScores.pop();
+            break;
+        }
+
+    }
+    // console.log(highScores);
+
+  
+
+
+    //re-paint leaderboard with new scores
+    var names = document.getElementsByClassName('userName');
+    var scores = document.getElementsByClassName('userScore');
+
+    for(let i =0; i< names.length; i++)
+    {   
+        names[i].innerHTML = highScores[i].name;
+        scores[i].innerHTML = highScores[i].score;
+        if(highScores[i].isNew==true)
+        {
+            names[i].style['color']='yellowgreen'; 
+            scores[i].style['color']='yellowgreen';
+
+            highScores[i].isNew =false;
+
+        }
+    }
+
+      //ajax post
+      var xhttp = new XMLHttpRequest();
+                xhttp.open("POST", "{{url_for('postHighScores')}}",); 
+                xhttp.setRequestHeader("Content-Type", "application/json");
+                // xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+                xhttp.onreadystatechange = function() 
+                {
+                    if (this.readyState == 4 && this.status == 200) 
+                    {
+                        // Response
+                        let response = this.responseText;
+                        console.log(response)
+                        if(response.includes('ERROR'))
+                        {
+                            alert(response);
+                        }
+                    }
+                    // else
+                    // {
+                    //     let response = this.responseText;
+                    //     alert('ERROR POSTING YOUR SCORE' + response);
+                    // }
+                }
+                var data = JSON.stringify(highScores);
+                // var data = '{"name":"Rob","score":30,"isNew":false}'
+                console.log(data);
+                console.log(typeof data);
+                xhttp.send(data);
+
+    playAgainButton.style['display'] = 'inline-block';
+
+    nameInput.style['display'] = 'none';
+    submitButton.style['display'] = 'none';
+}
+
+
+function closeInstructions()
+{
+    instructions.style['display'] = 'none';
+    newGame();
+}
+
+function makeCap(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+// variables //
+const adjatives = ['adorable','angry','annoyed','arrogant','average','awful','beautiful','bloody',
+    'blue-eyed','aggressive','blushing','bright','charming','clean','cloudy','combative','courageous',
+    'crazy','creepy','cute','dangerous','dark','defiant','delightful','difficult','distinct','dizzy','dull'];
+const fishTypes = ['Anchovy','Bass','Butterfish','Carp','Cod','Flounder','Snapper','Marlin','Salmon','Tuna'];
+const colors = ['Blue', 'Red', 'Yellow', 'Orange', 'Green'];
+</script>

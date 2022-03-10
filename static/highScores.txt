@@ -1,0 +1,1 @@
+[{"name": "Rob", "score": 30, "isNew": false}, {"name": "abcd", "score": 29, "isNew": false}, {"name": "11111111", "score": 27.64, "isNew": false}, {"name": "is", "score": 25, "isNew": false}, {"name": "qqqqq", "score": 24.83, "isNew": false}]
